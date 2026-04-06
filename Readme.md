@@ -1,0 +1,7 @@
+Dans le cadre de ce projet DevOps, nous avons pour objectif de transformer une application existante en une solution plus professionnelle en intégrant les principes de l’intégration et du déploiement continus (CI/CD).
+
+L’application fournie est déjà fonctionnelle, ce qui signifie que notre travail ne consiste pas à la créer depuis zéro, mais plutôt à la comprendre, l’analyser et l’améliorer. Dans un premier temps, nous avons pris connaissance du projet en explorant sa structure, les différents fichiers et les technologies utilisées. Cela nous a permis de mieux comprendre son fonctionnement global ainsi que les principales fonctionnalités proposées.
+
+Nous avons remarqué que l’application est organisée de manière classique, avec une séparation entre les différentes parties du code (logique métier, gestion des données, etc.). Cependant, elle reste encore limitée sur plusieurs aspects importants, notamment l’absence d’automatisation, de tests intégrés, de contrôle de qualité du code, ainsi que de mécanismes de déploiement et de supervision.
+
+L’objectif du projet est donc d’améliorer cette application en mettant en place une chaîne DevOps complète. Concrètement, cela signifie automatiser les différentes étapes du cycle de vie de l’application : gestion du code avec Git, intégration continue avec Jenkins, ajout de tests automatisés, analyse de la qualité avec Sonar, gestion des versions avec Nexus, déploiement avec Docker, ainsi que la mise en place d’outils de monitoring comme Prometheus et Grafana.
