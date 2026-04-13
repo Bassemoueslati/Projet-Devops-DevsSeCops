@@ -1,73 +1,58 @@
-// Jenkins pipeline for Spring Boot project
-// This pipeline automates build, test and execution steps
+// Alternative Jenkins pipeline structure using environment and steps block
 
 pipeline {
-    agent any  // Run on any available Jenkins agent
+    agent any
+
+    // Global environment variables
+    environment {
+        APP_NAME = 'Achat'
+    }
 
     stages {
 
-        // ==============================
-        // BUILD STAGE
-        // ==============================
-        stage('Build') {
+        stage('Initialize') {
             steps {
-                echo ' Building the project...'
-
-                // Clean previous builds and package the application into a JAR
-                // - clean: removes old target directory
-                // - package: compiles code and creates executable JAR
-                // -DskipTests: skip tests for faster build
-                sh 'mvn clean package -DskipTests'
+                echo " Starting pipeline for ${APP_NAME}"
             }
         }
 
-        // ==============================
-        // TEST STAGE
-        // ==============================
-        stage('Test') {
+        stage('Build & Package') {
             steps {
-                echo ' Running tests...'
-
-                // Execute unit tests to verify code correctness
-                sh 'mvn test'
+                script {
+                    echo ' Building project...'
+                    sh 'mvn clean package -DskipTests'
+                }
             }
         }
 
-        // ==============================
-        // RUN STAGE
-        // ==============================
-        stage('Run') {
+        stage('Testing') {
             steps {
-                echo ' Starting application...'
+                script {
+                    echo ' Executing tests...'
+                    sh 'mvn test'
+                }
+            }
+        }
 
-                // Run Spring Boot application in background
-                // nohup: keeps app running after Jenkins finishes
-                // > app.log: save logs into file
-                // 2>&1: merge error and output logs
-                // &: run in background
-                sh 'nohup java -jar target/*.jar > app.log 2>&1 &'
+        stage('Execution') {
+            steps {
+                script {
+                    echo ' Running application...'
+                    sh 'nohup java -jar target/*.jar > app.log 2>&1 &'
+                }
             }
         }
     }
 
-    // ==============================
-    // POST ACTIONS
-    // ==============================
     post {
-
-        // Executed if pipeline succeeds
         success {
-            echo ' Build and execution SUCCESS'
+            echo " ${APP_NAME} pipeline executed successfully"
         }
-
-        // Executed if pipeline fails
         failure {
-            echo ' Build FAILED'
+            echo " ${APP_NAME} pipeline failed"
         }
-
-        // Always executed
         always {
-            echo ' Pipeline finished'
+            echo " End of pipeline"
         }
     }
 }
