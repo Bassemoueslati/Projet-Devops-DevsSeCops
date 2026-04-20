@@ -43,6 +43,17 @@ pipeline {
             }
         }
     }
+       stage('SonarQube Analysis') {
+            steps {
+                echo 'Analyzing code with SonarQube...'
+
+                dir('achat/achat') {
+                    withSonarQubeEnv('Sonar') {
+                        sh 'mvn sonar:sonar'
+                    }
+                }
+            }
+        }
 
     post {
         success {
