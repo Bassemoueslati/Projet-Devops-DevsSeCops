@@ -3,6 +3,8 @@ package tn.esprit.rh.achat.controllers;
 import io.swagger.annotations.Api;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+
+import tn.esprit.rh.achat.dto.ReglementDTO;
 import tn.esprit.rh.achat.entities.Reglement;
 import tn.esprit.rh.achat.services.IReglementService;
 
@@ -22,7 +24,13 @@ public class ReglementRestController {
     }
 
     @PostMapping("/add-reglement")
-    public Reglement addReglement(@RequestBody Reglement r) {
+    public Reglement addReglement(@RequestBody ReglementDTO dto) {
+        Reglement r = new Reglement();
+        r.setIdReglement(dto.getIdReglement());
+        r.setMontantPaye(dto.getMontantPaye());
+        r.setMontantRestant(dto.getMontantRestant());
+        r.setPayee(dto.getPayee());
+        r.setDateReglement(dto.getDateReglement());
         return reglementService.addReglement(r);
     }
 

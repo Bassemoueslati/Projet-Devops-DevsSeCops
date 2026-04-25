@@ -3,6 +3,8 @@ package tn.esprit.rh.achat.controllers;
 import io.swagger.annotations.Api;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+
+import tn.esprit.rh.achat.dto.FactureDTO;
 import tn.esprit.rh.achat.entities.Facture;
 import tn.esprit.rh.achat.services.IFactureService;
 
@@ -32,7 +34,14 @@ public class FactureRestController {
     }
 
     @PostMapping("/add-facture")
-    public Facture addFacture(@RequestBody Facture f) {
+    public Facture addFacture(@RequestBody FactureDTO dto) {
+        Facture f = new Facture();
+        f.setIdFacture(dto.getIdFacture());
+        f.setMontantFacture(dto.getMontantFacture());
+        f.setMontantRemise(dto.getMontantRemise());
+        f.setDateCreationFacture(dto.getDateCreationFacture());
+        f.setDateDerniereModificationFacture(dto.getDateDerniereModificationFacture());
+        f.setArchivee(dto.getArchivee());
         return factureService.addFacture(f);
     }
 

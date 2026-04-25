@@ -2,6 +2,8 @@ package tn.esprit.rh.achat.controllers;
 
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
+
+import tn.esprit.rh.achat.dto.ProduitDTO;
 import tn.esprit.rh.achat.entities.Produit;
 import tn.esprit.rh.achat.services.IProduitService;
 
@@ -29,20 +31,34 @@ public class ProduitRestController {
         return produitService.retrieveProduit(produitId);
     }
 
-    @PostMapping("/add-produit")
-    public Produit addProduit(@RequestBody Produit p) {
-        return produitService.addProduit(p);
-    }
+	@PostMapping("/add-produit")
+	public Produit addProduit(@RequestBody ProduitDTO dto) {
+		Produit p = new Produit();
+		p.setIdProduit(dto.getIdProduit());
+		p.setCodeProduit(dto.getCodeProduit());
+		p.setLibelleProduit(dto.getLibelleProduit());
+		p.setPrix(dto.getPrix());
+		p.setDateCreation(dto.getDateCreation());
+		p.setDateDerniereModification(dto.getDateDerniereModification());
+		return produitService.addProduit(p);
+	}
 
     @DeleteMapping("/remove-produit/{produit-id}")
     public void removeProduit(@PathVariable("produit-id") Long produitId) {
         produitService.deleteProduit(produitId);
     }
 
-    @PutMapping("/modify-produit")
-    public Produit modifyProduit(@RequestBody Produit p) {
-        return produitService.updateProduit(p);
-    }
+	@PutMapping("/modify-produit")
+	public Produit modifyProduit(@RequestBody ProduitDTO dto) {
+		Produit p = new Produit();
+		p.setIdProduit(dto.getIdProduit());
+		p.setCodeProduit(dto.getCodeProduit());
+		p.setLibelleProduit(dto.getLibelleProduit());
+		p.setPrix(dto.getPrix());
+		p.setDateCreation(dto.getDateCreation());
+		p.setDateDerniereModification(dto.getDateDerniereModification());
+		return produitService.updateProduit(p);
+	}
 
     @PutMapping("/assignProduitToStock/{idProduit}/{idStock}")
     public void assignProduitToStock(@PathVariable Long idProduit, @PathVariable Long idStock) {

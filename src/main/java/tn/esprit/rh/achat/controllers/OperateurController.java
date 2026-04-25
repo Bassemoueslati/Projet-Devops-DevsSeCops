@@ -2,6 +2,8 @@ package tn.esprit.rh.achat.controllers;
 
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
+
+import tn.esprit.rh.achat.dto.OperateurDTO;
 import tn.esprit.rh.achat.entities.Operateur;
 import tn.esprit.rh.achat.services.IOperateurService;
 
@@ -29,18 +31,26 @@ public class OperateurController {
         return operateurService.retrieveOperateur(operateurId);
     }
 
-    @PostMapping("/add-operateur")
-    public Operateur addOperateur(@RequestBody Operateur op) {
-        return operateurService.addOperateur(op);
-    }
+	@PostMapping("/add-operateur")
+	public Operateur addOperateur(@RequestBody OperateurDTO dto) {
+		Operateur op = new Operateur();
+		op.setIdOperateur(dto.getIdOperateur());
+		op.setNom(dto.getNom());
+		op.setPrenom(dto.getPrenom());
+		return operateurService.addOperateur(op);
+	}
 
     @DeleteMapping("/remove-operateur/{operateur-id}")
     public void removeOperateur(@PathVariable("operateur-id") Long operateurId) {
         operateurService.deleteOperateur(operateurId);
     }
 
-    @PutMapping("/modify-operateur")
-    public Operateur modifyOperateur(@RequestBody Operateur operateur) {
-        return operateurService.updateOperateur(operateur);
-    }
+	@PutMapping("/modify-operateur")
+	public Operateur modifyOperateur(@RequestBody OperateurDTO dto) {
+		Operateur op = new Operateur();
+		op.setIdOperateur(dto.getIdOperateur());
+		op.setNom(dto.getNom());
+		op.setPrenom(dto.getPrenom());
+		return operateurService.updateOperateur(op);
+	}
 }
