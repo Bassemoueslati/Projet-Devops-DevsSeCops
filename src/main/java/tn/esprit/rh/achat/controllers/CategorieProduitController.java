@@ -2,9 +2,10 @@ package tn.esprit.rh.achat.controllers;
 
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
+
+import tn.esprit.rh.achat.dto.CategorieProduitDTO;
 import tn.esprit.rh.achat.entities.CategorieProduit;
 import tn.esprit.rh.achat.services.ICategorieProduitService;
-
 import java.util.List;
 
 @RestController
@@ -30,10 +31,14 @@ public class CategorieProduitController {
         return categorieProduitService.retrieveCategorieProduit(categorieProduitId);
     }
 
-    @PostMapping("/add-categorieProduit")
-    public CategorieProduit addCategorieProduit(@RequestBody CategorieProduit cp) {
-        return categorieProduitService.addCategorieProduit(cp);
-    }
+	@PostMapping("/add-categorieProduit")
+	public CategorieProduit addCategorieProduit(@RequestBody CategorieProduitDTO dto) {
+		CategorieProduit cp = new CategorieProduit();
+		cp.setIdCategorieProduit(dto.getIdCategorieProduit());
+		cp.setCodeCategorie(dto.getCodeCategorie());
+		cp.setLibelleCategorie(dto.getLibelleCategorie());
+		return categorieProduitService.addCategorieProduit(cp);
+	}
 
     @DeleteMapping("/remove-categorieProduit/{categorieProduit-id}")
     public void removeCategorieProduit(
@@ -41,9 +46,12 @@ public class CategorieProduitController {
         categorieProduitService.deleteCategorieProduit(categorieProduitId);
     }
 
-    @PutMapping("/modify-categorieProduit")
-    public CategorieProduit modifyCategorieProduit(
-            @RequestBody CategorieProduit categorieProduit) {
-        return categorieProduitService.updateCategorieProduit(categorieProduit);
-    }
+	@PutMapping("/modify-categorieProduit")
+	public CategorieProduit modifyCategorieProduit(@RequestBody CategorieProduitDTO dto) {
+		CategorieProduit cp = new CategorieProduit();
+		cp.setIdCategorieProduit(dto.getIdCategorieProduit());
+		cp.setCodeCategorie(dto.getCodeCategorie());
+		cp.setLibelleCategorie(dto.getLibelleCategorie());
+		return categorieProduitService.updateCategorieProduit(cp);
+	}
 }
