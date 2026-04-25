@@ -58,7 +58,7 @@ public class FactureRestController {
         try {
             return factureService.pourcentageRecouvrement(startDate, endDate);
         } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+            throw new IllegalStateException("Error calculating pourcentageRecouvrement", e);
+}
     }
 }
