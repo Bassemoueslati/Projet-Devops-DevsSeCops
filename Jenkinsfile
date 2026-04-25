@@ -46,6 +46,7 @@ pipeline {
                         -Dsonar.projectKey=achat \
                         -Dsonar.host.url=http://localhost:9000 \
                         -Dsonar.login=$SONAR_TOKEN \
+                        -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
                         -Dsonar.qualitygate.wait=false
                         '''
                     }

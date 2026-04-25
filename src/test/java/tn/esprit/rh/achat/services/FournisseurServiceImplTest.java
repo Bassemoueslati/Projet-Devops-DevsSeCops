@@ -1,0 +1,15 @@
+package tn.esprit.rh.achat.services;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@SpringBootTest
+class FournisseurServiceImplTest {
+
+    @Test
+    void testBasic() {
+        assertTrue(true);
+    }
+}
