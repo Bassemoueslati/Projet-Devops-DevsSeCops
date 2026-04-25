@@ -95,7 +95,7 @@ public class FactureServiceImpl implements IFactureService {
 		Fournisseur fournisseur = fournisseurRepository.findById(idFournisseur).orElse(null);
 
 		if (fournisseur == null) {
-			throw new RuntimeException("Fournisseur not found");
+			throw new IllegalArgumentException("Fournisseur not found");
 		}
 
 		return (List<Facture>) fournisseur.getFactures();
@@ -107,7 +107,7 @@ public class FactureServiceImpl implements IFactureService {
 		Operateur operateur = operateurRepository.findById(idOperateur).orElse(null);
 
 		if (facture == null || operateur == null) {
-			throw new RuntimeException("Facture or Operateur not found");
+			throw new IllegalArgumentException("Facture or Operateur not found");
 		}
 
 		operateur.getFactures().add(facture);
