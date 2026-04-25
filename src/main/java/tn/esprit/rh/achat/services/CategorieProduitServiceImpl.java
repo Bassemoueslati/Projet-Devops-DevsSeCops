@@ -10,37 +10,37 @@ import java.util.List;
 @Service
 public class CategorieProduitServiceImpl implements ICategorieProduitService {
 
-	
-	@Autowired
-	CategorieProduitRepository categorieProduitRepository;
-	@Override
-	public List<CategorieProduit> retrieveAllCategorieProduits() {
-		
-		return categorieProduitRepository.findAll();
-	}
+    private final CategorieProduitRepository categorieProduitRepository;
 
-	@Override
-	public CategorieProduit addCategorieProduit(CategorieProduit cp) {
-		categorieProduitRepository.save(cp);
-		return cp;
-	}
+    public CategorieProduitServiceImpl(CategorieProduitRepository categorieProduitRepository) {
+        this.categorieProduitRepository = categorieProduitRepository;
+    }
 
-	@Override
-	public void deleteCategorieProduit(Long id) {
-		categorieProduitRepository.deleteById(id);
-		
-	}
+    @Override
+    public List<CategorieProduit> retrieveAllCategorieProduits() {
+        return categorieProduitRepository.findAll();
+    }
 
-	@Override
-	public CategorieProduit updateCategorieProduit(CategorieProduit cp) {
-		categorieProduitRepository.save(cp);
-		return cp;
-	}
+    @Override
+    public CategorieProduit addCategorieProduit(CategorieProduit cp) {
+        return categorieProduitRepository.save(cp);
+    }
 
-	@Override
-	public CategorieProduit retrieveCategorieProduit(Long id) {
-		CategorieProduit categorieProduit = categorieProduitRepository.findById(id).orElse(null);
-		return categorieProduit;
-	}
+    @Override
+    public void deleteCategorieProduit(Long id) {
+        categorieProduitRepository.deleteById(id);
+    }
 
+    @Override
+    public CategorieProduit updateCategorieProduit(CategorieProduit cp) {
+        if (!categorieProduitRepository.existsById(cp.getIdCategorieProduit())) {
+            throw new IllegalArgumentException("CategorieProduit not found");
+        }
+        return categorieProduitRepository.save(cp);
+    }
+
+    @Override
+    public CategorieProduit retrieveCategorieProduit(Long id) {
+        return categorieProduitRepository.findById(id).orElse(null);
+    }
 }

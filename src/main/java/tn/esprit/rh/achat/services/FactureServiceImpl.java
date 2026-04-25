@@ -7,6 +7,8 @@ import tn.esprit.rh.achat.entities.*;
 import tn.esprit.rh.achat.repositories.*;
 
 import javax.transaction.Transactional;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -16,22 +18,30 @@ import java.util.Set;
 @Transactional
 public class FactureServiceImpl implements IFactureService {
 
-	@Autowired
-	FactureRepository factureRepository;
-	@Autowired
-	OperateurRepository operateurRepository;
-	@Autowired
-	DetailFactureRepository detailFactureRepository;
-	@Autowired
-	FournisseurRepository fournisseurRepository;
-	@Autowired
-	ProduitRepository produitRepository;
-    @Autowired
-    ReglementServiceImpl reglementService;
+	private final FactureRepository factureRepository;
+	private final OperateurRepository operateurRepository;
+	private final DetailFactureRepository detailFactureRepository;
+	private final FournisseurRepository fournisseurRepository;
+	private final ProduitRepository produitRepository;
+	private final ReglementServiceImpl reglementService;
+
+	public FactureServiceImpl(FactureRepository factureRepository,
+							OperateurRepository operateurRepository,
+							DetailFactureRepository detailFactureRepository,
+							FournisseurRepository fournisseurRepository,
+							ProduitRepository produitRepository,
+							ReglementServiceImpl reglementService) {
+		this.factureRepository = factureRepository;
+		this.operateurRepository = operateurRepository;
+		this.detailFactureRepository = detailFactureRepository;
+		this.fournisseurRepository = fournisseurRepository;
+		this.produitRepository = produitRepository;
+		this.reglementService = reglementService;
+	}
 	
 	@Override
 	public List<Facture> retrieveAllFactures() {
-		List<Facture> factures = (List<Facture>) factureRepository.findAll();
+		List<Facture> factures = factureRepository.findAll();
 		for (Facture facture : factures) {
 			log.info(" facture : " + facture);
 		}
@@ -47,34 +57,12 @@ public class FactureServiceImpl implements IFactureService {
 	 * calculer les montants remise et le montant total d'un détail facture
 	 * ainsi que les montants d'une facture
 	 */
-	private Facture addDetailsFacture(Facture f, Set<DetailFacture> detailsFacture) {
-		float montantFacture = 0;
-		float montantRemise = 0;
-		for (DetailFacture detail : detailsFacture) {
-			//Récuperer le produit 
-			Produit produit = produitRepository.findById(detail.getProduit().getIdProduit()).get();
-			//Calculer le montant total pour chaque détail Facture
-			float prixTotalDetail = detail.getQteCommandee() * produit.getPrix();
-			//Calculer le montant remise pour chaque détail Facture
-			float montantRemiseDetail = (prixTotalDetail * detail.getPourcentageRemise()) / 100;
-			float prixTotalDetailRemise = prixTotalDetail - montantRemiseDetail;
-			detail.setMontantRemise(montantRemiseDetail);
-			detail.setPrixTotalDetail(prixTotalDetailRemise);
-			//Calculer le montant total pour la facture
-			montantFacture = montantFacture + prixTotalDetailRemise;
-			//Calculer le montant remise pour la facture
-			montantRemise = montantRemise + montantRemiseDetail;
-			detailFactureRepository.save(detail);
-		}
-		f.setMontantFacture(montantFacture);
-		f.setMontantRemise(montantRemise);
-		return f;
-	}
+	
 
 	@Override
 	public void cancelFacture(Long factureId) {
 		// Méthode 01
-		//Facture facture = factureRepository.findById(factureId).get();
+		
 		Facture facture = factureRepository.findById(factureId).orElse(new Facture());
 		facture.setArchivee(true);
 		factureRepository.save(facture);
@@ -98,7 +86,7 @@ public class FactureServiceImpl implements IFactureService {
 			throw new IllegalArgumentException("Fournisseur not found");
 		}
 
-		return (List<Facture>) fournisseur.getFactures();
+		return new ArrayList<>(fournisseur.getFactures());
 	}
 
 	@Override
@@ -118,8 +106,7 @@ public class FactureServiceImpl implements IFactureService {
 	public float pourcentageRecouvrement(Date startDate, Date endDate) {
 		float totalFacturesEntreDeuxDates = factureRepository.getTotalFacturesEntreDeuxDates(startDate,endDate);
 		float totalRecouvrementEntreDeuxDates =reglementService.getChiffreAffaireEntreDeuxDate(startDate,endDate);
-		float pourcentage=(totalRecouvrementEntreDeuxDates/totalFacturesEntreDeuxDates)*100;
-		return pourcentage;
+		return (totalRecouvrementEntreDeuxDates / totalFacturesEntreDeuxDates) * 100;
 	}
 	
 
