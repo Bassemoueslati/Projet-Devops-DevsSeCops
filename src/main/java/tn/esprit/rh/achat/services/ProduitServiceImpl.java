@@ -1,7 +1,6 @@
 package tn.esprit.rh.achat.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tn.esprit.rh.achat.entities.Produit;
 import tn.esprit.rh.achat.entities.Stock;
@@ -16,55 +15,67 @@ import java.util.List;
 @Slf4j
 public class ProduitServiceImpl implements IProduitService {
 
-	@Autowired
-	ProduitRepository produitRepository;
-	@Autowired
-	StockRepository stockRepository;
-	@Autowired
-	CategorieProduitRepository categorieProduitRepository;
+    private final ProduitRepository produitRepository;
+    private final StockRepository stockRepository;
+    private final CategorieProduitRepository categorieProduitRepository;
 
-	@Override
-	public List<Produit> retrieveAllProduits() {
-		List<Produit> produits = (List<Produit>) produitRepository.findAll();
-		for (Produit produit : produits) {
-			log.info(" Produit : " + produit);
-		}
-		return produits;
-	}
+    
+    public ProduitServiceImpl(ProduitRepository produitRepository,
+                              StockRepository stockRepository,
+                              CategorieProduitRepository categorieProduitRepository) {
+        this.produitRepository = produitRepository;
+        this.stockRepository = stockRepository;
+        this.categorieProduitRepository = categorieProduitRepository;
+    }
 
-	@Transactional
-	public Produit addProduit(Produit p) {
-		produitRepository.save(p);
-		return p;
-	}
+    @Override
+    public List<Produit> retrieveAllProduits() {
+        List<Produit> produits = produitRepository.findAll();
+        for (Produit produit : produits) {
+            log.info("Produit : {}", produit);
+        }
+        return produits;
+    }
 
-	
+    @Override
+    @Transactional
+    public Produit addProduit(Produit p) {
+        return produitRepository.save(p);
+    }
 
-	@Override
-	public void deleteProduit(Long produitId) {
-		produitRepository.deleteById(produitId);
-	}
+    @Override
+    public void deleteProduit(Long produitId) {
+        produitRepository.deleteById(produitId);
+    }
 
-	@Override
-	public Produit updateProduit(Produit p) {
-		return produitRepository.save(p);
-	}
+    @Override
+    public Produit updateProduit(Produit p) {
+        return produitRepository.save(p);
+    }
 
-	@Override
-	public Produit retrieveProduit(Long produitId) {
-		Produit produit = produitRepository.findById(produitId).orElse(null);
-		log.info("produit :" + produit);
-		return produit;
-	}
+    @Override
+    public Produit retrieveProduit(Long produitId) {
+        Produit produit = produitRepository.findById(produitId).orElse(null);
+        log.info("produit : {}", produit);
+        return produit;
+    }
 
-	@Override
-	public void assignProduitToStock(Long idProduit, Long idStock) {
-		Produit produit = produitRepository.findById(idProduit).orElse(null);
-		Stock stock = stockRepository.findById(idStock).orElse(null);
-		produit.setStock(stock);
-		produitRepository.save(produit);
+    @Override
+    public void assignProduitToStock(Long idProduit, Long idStock) {
 
-	}
+        Produit produit = produitRepository.findById(idProduit).orElse(null);
+        Stock stock = stockRepository.findById(idStock).orElse(null);
 
+        
+        if (produit == null) {
+            throw new IllegalArgumentException("Produit not found");
+        }
 
+        if (stock == null) {
+            throw new IllegalArgumentException("Stock not found");
+        }
+
+        produit.setStock(stock);
+        produitRepository.save(produit);
+    }
 }
