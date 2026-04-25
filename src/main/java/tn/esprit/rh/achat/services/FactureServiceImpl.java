@@ -18,96 +18,78 @@ import java.util.Set;
 @Transactional
 public class FactureServiceImpl implements IFactureService {
 
-	private final FactureRepository factureRepository;
-	private final OperateurRepository operateurRepository;
-	private final DetailFactureRepository detailFactureRepository;
-	private final FournisseurRepository fournisseurRepository;
-	private final ProduitRepository produitRepository;
-	private final ReglementServiceImpl reglementService;
+    private final FactureRepository factureRepository;
+    private final OperateurRepository operateurRepository;
+    private final FournisseurRepository fournisseurRepository;
+    private final ReglementServiceImpl reglementService;
 
-	public FactureServiceImpl(FactureRepository factureRepository,
-							OperateurRepository operateurRepository,
-							DetailFactureRepository detailFactureRepository,
-							FournisseurRepository fournisseurRepository,
-							ProduitRepository produitRepository,
-							ReglementServiceImpl reglementService) {
-		this.factureRepository = factureRepository;
-		this.operateurRepository = operateurRepository;
-		this.detailFactureRepository = detailFactureRepository;
-		this.fournisseurRepository = fournisseurRepository;
-		this.produitRepository = produitRepository;
-		this.reglementService = reglementService;
-	}
-	
-	@Override
-	public List<Facture> retrieveAllFactures() {
-		List<Facture> factures = factureRepository.findAll();
-		for (Facture facture : factures) {
-			log.info(" facture : " + facture);
-		}
-		return factures;
-	}
+    public FactureServiceImpl(FactureRepository factureRepository,
+                             OperateurRepository operateurRepository,
+                             FournisseurRepository fournisseurRepository,
+                             ReglementServiceImpl reglementService) {
+        this.factureRepository = factureRepository;
+        this.operateurRepository = operateurRepository;
+        this.fournisseurRepository = fournisseurRepository;
+        this.reglementService = reglementService;
+    }
 
-	
-	public Facture addFacture(Facture f) {
-		return factureRepository.save(f);
-	}
+    @Override
+    public List<Facture> retrieveAllFactures() {
+        List<Facture> factures = factureRepository.findAll();
+        for (Facture facture : factures) {
+            log.info(" facture : " + facture);
+        }
+        return factures;
+    }
 
-	/*
-	 * calculer les montants remise et le montant total d'un détail facture
-	 * ainsi que les montants d'une facture
-	 */
-	
+    @Override
+    public Facture addFacture(Facture f) {
+        return factureRepository.save(f);
+    }
 
-	@Override
-	public void cancelFacture(Long factureId) {
-		// Méthode 01
-		
-		Facture facture = factureRepository.findById(factureId).orElse(new Facture());
-		facture.setArchivee(true);
-		factureRepository.save(facture);
-		//Méthode 02 (Avec JPQL)
-		factureRepository.updateFacture(factureId);
-	}
+    @Override
+    public void cancelFacture(Long factureId) {
+        Facture facture = factureRepository.findById(factureId).orElse(new Facture());
+        facture.setArchivee(true);
+        factureRepository.save(facture);
+        factureRepository.updateFacture(factureId);
+    }
 
-	@Override
-	public Facture retrieveFacture(Long factureId) {
+    @Override
+    public Facture retrieveFacture(Long factureId) {
+        Facture facture = factureRepository.findById(factureId).orElse(null);
+        log.info("facture :" + facture);
+        return facture;
+    }
 
-		Facture facture = factureRepository.findById(factureId).orElse(null);
-		log.info("facture :" + facture);
-		return facture;
-	}
+    @Override
+    public List<Facture> getFacturesByFournisseur(Long idFournisseur) {
+        Fournisseur fournisseur = fournisseurRepository.findById(idFournisseur).orElse(null);
 
-	@Override
-	public List<Facture> getFacturesByFournisseur(Long idFournisseur) {
-		Fournisseur fournisseur = fournisseurRepository.findById(idFournisseur).orElse(null);
+        if (fournisseur == null) {
+            throw new IllegalArgumentException("Fournisseur not found");
+        }
 
-		if (fournisseur == null) {
-			throw new IllegalArgumentException("Fournisseur not found");
-		}
+        return new ArrayList<>(fournisseur.getFactures());
+    }
 
-		return new ArrayList<>(fournisseur.getFactures());
-	}
+    @Override
+    public void assignOperateurToFacture(Long idOperateur, Long idFacture) {
+        Facture facture = factureRepository.findById(idFacture).orElse(null);
+        Operateur operateur = operateurRepository.findById(idOperateur).orElse(null);
 
-	@Override
-	public void assignOperateurToFacture(Long idOperateur, Long idFacture) {
-		Facture facture = factureRepository.findById(idFacture).orElse(null);
-		Operateur operateur = operateurRepository.findById(idOperateur).orElse(null);
+        if (facture == null || operateur == null) {
+            throw new IllegalArgumentException("Facture or Operateur not found");
+        }
 
-		if (facture == null || operateur == null) {
-			throw new IllegalArgumentException("Facture or Operateur not found");
-		}
+        operateur.getFactures().add(facture);
+        operateurRepository.save(operateur);
+    }
 
-		operateur.getFactures().add(facture);
-		operateurRepository.save(operateur);
-	}
-
-	@Override
-	public float pourcentageRecouvrement(Date startDate, Date endDate) {
-		float totalFacturesEntreDeuxDates = factureRepository.getTotalFacturesEntreDeuxDates(startDate,endDate);
-		float totalRecouvrementEntreDeuxDates =reglementService.getChiffreAffaireEntreDeuxDate(startDate,endDate);
-		return (totalRecouvrementEntreDeuxDates / totalFacturesEntreDeuxDates) * 100;
-	}
-	
-
+    @Override
+    public float pourcentageRecouvrement(Date startDate, Date endDate) {
+        float totalFacturesEntreDeuxDates = factureRepository.getTotalFacturesEntreDeuxDates(startDate, endDate);
+        float totalRecouvrementEntreDeuxDates = reglementService.getChiffreAffaireEntreDeuxDate(startDate, endDate);
+        return (totalRecouvrementEntreDeuxDates / totalFacturesEntreDeuxDates) * 100;
+    }
 }
