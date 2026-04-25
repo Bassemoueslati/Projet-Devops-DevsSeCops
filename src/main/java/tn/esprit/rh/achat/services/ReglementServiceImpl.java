@@ -2,7 +2,6 @@ package tn.esprit.rh.achat.services;
 
 import org.springframework.stereotype.Service;
 import tn.esprit.rh.achat.entities.Reglement;
-import tn.esprit.rh.achat.repositories.FactureRepository;
 import tn.esprit.rh.achat.repositories.ReglementRepository;
 
 import java.util.Date;
@@ -11,24 +10,21 @@ import java.util.List;
 @Service
 public class ReglementServiceImpl implements IReglementService {
 
-    private final FactureRepository factureRepository;
     private final ReglementRepository reglementRepository;
 
- 
-    public ReglementServiceImpl(FactureRepository factureRepository,
-                                ReglementRepository reglementRepository) {
-        this.factureRepository = factureRepository;
+    // ✅ FIXED constructor (removed unused dependency)
+    public ReglementServiceImpl(ReglementRepository reglementRepository) {
         this.reglementRepository = reglementRepository;
     }
 
     @Override
     public List<Reglement> retrieveAllReglements() {
-        return reglementRepository.findAll(); 
+        return reglementRepository.findAll();
     }
 
     @Override
     public Reglement addReglement(Reglement r) {
-        return reglementRepository.save(r); 
+        return reglementRepository.save(r);
     }
 
     @Override

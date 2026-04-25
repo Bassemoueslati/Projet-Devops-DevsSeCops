@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import tn.esprit.rh.achat.entities.Produit;
 import tn.esprit.rh.achat.entities.Stock;
-import tn.esprit.rh.achat.repositories.CategorieProduitRepository;
 import tn.esprit.rh.achat.repositories.ProduitRepository;
 import tn.esprit.rh.achat.repositories.StockRepository;
 
@@ -17,15 +16,12 @@ public class ProduitServiceImpl implements IProduitService {
 
     private final ProduitRepository produitRepository;
     private final StockRepository stockRepository;
-    private final CategorieProduitRepository categorieProduitRepository;
 
-    
+    // ✅ FIXED constructor (removed unused dependency)
     public ProduitServiceImpl(ProduitRepository produitRepository,
-                              StockRepository stockRepository,
-                              CategorieProduitRepository categorieProduitRepository) {
+                              StockRepository stockRepository) {
         this.produitRepository = produitRepository;
         this.stockRepository = stockRepository;
-        this.categorieProduitRepository = categorieProduitRepository;
     }
 
     @Override
@@ -66,7 +62,6 @@ public class ProduitServiceImpl implements IProduitService {
         Produit produit = produitRepository.findById(idProduit).orElse(null);
         Stock stock = stockRepository.findById(idStock).orElse(null);
 
-        
         if (produit == null) {
             throw new IllegalArgumentException("Produit not found");
         }

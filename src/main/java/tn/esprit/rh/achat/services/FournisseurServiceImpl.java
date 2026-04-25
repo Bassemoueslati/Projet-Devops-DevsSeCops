@@ -7,7 +7,6 @@ import tn.esprit.rh.achat.entities.Fournisseur;
 import tn.esprit.rh.achat.entities.SecteurActivite;
 import tn.esprit.rh.achat.repositories.DetailFournisseurRepository;
 import tn.esprit.rh.achat.repositories.FournisseurRepository;
-import tn.esprit.rh.achat.repositories.ProduitRepository;
 import tn.esprit.rh.achat.repositories.SecteurActiviteRepository;
 
 import java.util.Date;
@@ -19,16 +18,14 @@ public class FournisseurServiceImpl implements IFournisseurService {
 
     private final FournisseurRepository fournisseurRepository;
     private final DetailFournisseurRepository detailFournisseurRepository;
-    private final ProduitRepository produitRepository;
     private final SecteurActiviteRepository secteurActiviteRepository;
 
+    
     public FournisseurServiceImpl(FournisseurRepository fournisseurRepository,
                                  DetailFournisseurRepository detailFournisseurRepository,
-                                 ProduitRepository produitRepository,
                                  SecteurActiviteRepository secteurActiviteRepository) {
         this.fournisseurRepository = fournisseurRepository;
         this.detailFournisseurRepository = detailFournisseurRepository;
-        this.produitRepository = produitRepository;
         this.secteurActiviteRepository = secteurActiviteRepository;
     }
 
@@ -36,7 +33,7 @@ public class FournisseurServiceImpl implements IFournisseurService {
     public List<Fournisseur> retrieveAllFournisseurs() {
         List<Fournisseur> fournisseurs = fournisseurRepository.findAll();
         for (Fournisseur fournisseur : fournisseurs) {
-            log.info(" fournisseur : " + fournisseur);
+            log.info("fournisseur : {}", fournisseur);
         }
         return fournisseurs;
     }
@@ -46,7 +43,7 @@ public class FournisseurServiceImpl implements IFournisseurService {
         DetailFournisseur df = new DetailFournisseur();
         df.setDateDebutCollaboration(new Date());
 
-        // Link detail to fournisseur
+        // link relation
         f.setDetailFournisseur(df);
 
         return fournisseurRepository.save(f);
@@ -76,11 +73,16 @@ public class FournisseurServiceImpl implements IFournisseurService {
 
     @Override
     public void assignSecteurActiviteToFournisseur(Long idSecteurActivite, Long idFournisseur) {
+
         Fournisseur fournisseur = fournisseurRepository.findById(idFournisseur).orElse(null);
         SecteurActivite secteurActivite = secteurActiviteRepository.findById(idSecteurActivite).orElse(null);
 
-        if (fournisseur == null || secteurActivite == null) {
-            throw new IllegalArgumentException("Fournisseur or SecteurActivite not found");
+        if (fournisseur == null) {
+            throw new IllegalArgumentException("Fournisseur not found");
+        }
+
+        if (secteurActivite == null) {
+            throw new IllegalArgumentException("SecteurActivite not found");
         }
 
         fournisseur.getSecteurActivites().add(secteurActivite);
