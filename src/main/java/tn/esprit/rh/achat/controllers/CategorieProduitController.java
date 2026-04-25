@@ -1,7 +1,6 @@
 package tn.esprit.rh.achat.controllers;
 
 import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.rh.achat.entities.CategorieProduit;
 import tn.esprit.rh.achat.services.ICategorieProduitService;
@@ -13,47 +12,38 @@ import java.util.List;
 @RequestMapping("/categorieProduit")
 public class CategorieProduitController {
 
-	
+    private final ICategorieProduitService categorieProduitService;
 
-	private final ICategorieProduitService categorieProduitService;
-
-    // ✅ Constructor Injection (instead of @Autowired)
+    // Constructor Injection
     public CategorieProduitController(ICategorieProduitService categorieProduitService) {
         this.categorieProduitService = categorieProduitService;
     }
 
-    // GET ALL
     @GetMapping("/retrieve-all-categorieProduit")
     public List<CategorieProduit> getCategorieProduit() {
         return categorieProduitService.retrieveAllCategorieProduits();
     }
 
-    // GET BY ID
     @GetMapping("/retrieve-categorieProduit/{categorieProduit-id}")
     public CategorieProduit retrieveCategorieProduit(
             @PathVariable("categorieProduit-id") Long categorieProduitId) {
         return categorieProduitService.retrieveCategorieProduit(categorieProduitId);
     }
 
-    // ADD
     @PostMapping("/add-categorieProduit")
     public CategorieProduit addCategorieProduit(@RequestBody CategorieProduit cp) {
         return categorieProduitService.addCategorieProduit(cp);
     }
 
-    // DELETE
     @DeleteMapping("/remove-categorieProduit/{categorieProduit-id}")
     public void removeCategorieProduit(
             @PathVariable("categorieProduit-id") Long categorieProduitId) {
         categorieProduitService.deleteCategorieProduit(categorieProduitId);
     }
 
-    // UPDATE
     @PutMapping("/modify-categorieProduit")
     public CategorieProduit modifyCategorieProduit(
             @RequestBody CategorieProduit categorieProduit) {
         return categorieProduitService.updateCategorieProduit(categorieProduit);
     }
-
-	
 }
