@@ -93,6 +93,11 @@ public class FactureServiceImpl implements IFactureService {
 	@Override
 	public List<Facture> getFacturesByFournisseur(Long idFournisseur) {
 		Fournisseur fournisseur = fournisseurRepository.findById(idFournisseur).orElse(null);
+
+		if (fournisseur == null) {
+			throw new RuntimeException("Fournisseur not found");
+		}
+
 		return (List<Facture>) fournisseur.getFactures();
 	}
 
@@ -100,6 +105,11 @@ public class FactureServiceImpl implements IFactureService {
 	public void assignOperateurToFacture(Long idOperateur, Long idFacture) {
 		Facture facture = factureRepository.findById(idFacture).orElse(null);
 		Operateur operateur = operateurRepository.findById(idOperateur).orElse(null);
+
+		if (facture == null || operateur == null) {
+			throw new RuntimeException("Facture or Operateur not found");
+		}
+
 		operateur.getFactures().add(facture);
 		operateurRepository.save(operateur);
 	}
