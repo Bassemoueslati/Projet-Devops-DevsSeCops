@@ -39,18 +39,19 @@ pipeline {
             steps {
                 echo 'Analyzing code with SonarQube...'
 
-            withSonarQubeEnv('SonarQube') {
-            withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
-                sh '''
-                mvn sonar:sonar \
-                -Dsonar.projectKey=achat \
-                -Dsonar.host.url=http://localhost:9000 \
-                -Dsonar.login=$SONAR_TOKEN
-                '''
+                withSonarQubeEnv('SonarQube') {
+                    withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+                        sh '''
+                        mvn clean verify sonar:sonar \
+                        -Dsonar.projectKey=achat \
+                        -Dsonar.host.url=http://localhost:9000 \
+                        -Dsonar.login=$SONAR_TOKEN \
+                        -Dsonar.qualitygate.wait=false
+                        '''
+                    }
+                }
             }
         }
-    }
-}
 
         // ✅ (optional but important for your project)
         stage('Deploy to Nexus') {
