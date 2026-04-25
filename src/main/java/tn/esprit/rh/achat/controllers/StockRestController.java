@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @Api(tags = "Gestion des stocks")
 @RequestMapping("/stock")
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:4200")
 public class StockRestController {
 
     private final IStockService stockService;

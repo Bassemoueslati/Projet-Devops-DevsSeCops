@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @Api(tags = "Gestion des secteurs activites")
 @RequestMapping("/secteurActivite")
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:4200")
 public class SecteurActiviteController {
 
     private final ISecteurActiviteService secteurActiviteService;

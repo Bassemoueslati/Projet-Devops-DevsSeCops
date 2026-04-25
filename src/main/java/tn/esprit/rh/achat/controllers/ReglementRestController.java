@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @Api(tags = "Gestion des reglements")
 @RequestMapping("/reglement")
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ReglementRestController {
 
     private final IReglementService reglementService;

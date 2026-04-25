@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @Api(tags = "Gestion des opérateurs")
 @RequestMapping("/operateur")
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:4200")
 public class OperateurController {
 
     private final IOperateurService operateurService;
