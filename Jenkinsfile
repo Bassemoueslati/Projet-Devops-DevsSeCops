@@ -1,77 +1,52 @@
 pipeline {
     agent any
 
-    environment {
-        APP_NAME = 'Achat'
-    }
-
     stages {
 
-        stage('Initialize') {
+        stage('Build') {
             steps {
-                echo "Starting pipeline for ${APP_NAME}"
-            }
-        }
-
-        stage('Build & Package') {
-            steps {
-                echo 'Building project...'
                 sh 'mvn clean package -DskipTests'
             }
         }
 
-        stage('Testing') {
+        stage('Test') {
             steps {
-                echo 'Executing tests...'
                 sh 'mvn test'
             }
         }
 
-        stage('Execution') {
+        stage('SonarQube') {
             steps {
-                echo 'Running application...'
-                sh 'nohup java -jar target/*.jar > app.log 2>&1 &'
-            }
-        }
-
-        // ✅ FIX: moved inside stages
-        stage('SonarQube Analysis') {
-            steps {
-                echo 'Analyzing code with SonarQube...'
-
                 withSonarQubeEnv('SonarQube') {
                     withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
                         sh '''
-                        mvn clean verify sonar:sonar \
+                        mvn sonar:sonar \
                         -Dsonar.projectKey=achat \
                         -Dsonar.host.url=http://localhost:9000 \
-                        -Dsonar.login=$SONAR_TOKEN \
-                        -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
-                        -Dsonar.qualitygate.wait=false
+                        -Dsonar.login=$SONAR_TOKEN
                         '''
                     }
                 }
             }
         }
 
-        // ✅ (optional but important for your project)
-        stage('Deploy to Nexus') {
+        stage('Nexus Deploy') {
             steps {
-                echo 'Deploying artifact to Nexus...'
                 sh 'mvn deploy'
             }
         }
-    }
 
-    post {
-        success {
-            echo "${APP_NAME} pipeline executed successfully"
+        stage('Docker Build') {
+            steps {
+                sh 'docker build -t achat-app .'
+            }
         }
-        failure {
-            echo "${APP_NAME} pipeline failed"
-        }
-        always {
-            echo "End of pipeline"
+
+        stage('Docker Deploy') {
+            steps {
+                sh 'docker-compose down || true'
+                sh 'docker-compose up -d --build'
+            }
         }
     }
 }
