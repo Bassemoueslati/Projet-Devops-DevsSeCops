@@ -11,15 +11,22 @@ services:
       MYSQL_DATABASE: achatdb
     ports:
       - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   app:
     build: .
     container_name: achat_app
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     ports:
       - "8089:8089"
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/achatdb
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
+    restart: always
