@@ -38,14 +38,20 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                sh 'docker build -t achat-app .'
+                sh '''
+                cd /vagrant/Projet-Devops-DevsSeCops
+                docker build -t achat-app .
+                '''
             }
         }
 
         stage('Docker Deploy') {
             steps {
-                sh 'docker-compose down || true'
-                sh 'docker-compose up -d --build'
+                sh '''
+                cd /vagrant/Projet-Devops-DevsSeCops
+                docker-compose down || true
+                docker-compose up -d --build
+                '''
             }
         }
     }
