@@ -45,7 +45,7 @@ class ProduitServiceImplTest {
 
     @Test
     void retrieveAllProduits() {
-        when(produitRepository.findAll()).thenReturn(java.util.Arrays.asList(produit));
+        when(produitRepository.findAll()).thenReturn(Arrays.asList(produit));
 
         List<Produit> result = service.retrieveAllProduits();
 
