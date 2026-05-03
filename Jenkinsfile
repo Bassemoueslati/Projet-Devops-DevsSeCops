@@ -39,7 +39,7 @@ pipeline {
         stage('Docker Build') {
             steps {
                 sh '''
-                cd /vagrant/Projet-Devops-DevsSeCops
+                cd /home/bassem/Projects/Projet-Devops-DevsSeCops
                 docker build -t achat-app .
                 '''
             }
