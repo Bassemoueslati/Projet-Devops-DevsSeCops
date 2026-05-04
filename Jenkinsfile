@@ -38,19 +38,15 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                sh '''
-                cd /home/bassem/Projects/Projet-Devops-DevsSeCops
-                docker build -t achat-app .
-                '''
+                sh 'docker build -t achat-app .'
             }
         }
 
         stage('Docker Deploy') {
             steps {
                 sh '''
-                cd /vagrant/Projet-Devops-DevsSeCops
-                docker-compose down || true
-                docker-compose up -d --build
+                docker compose down || true
+                docker compose up -d --build
                 '''
             }
         }
