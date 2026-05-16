@@ -31,3 +31,46 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Security ###
+
+# Environment files
+.env
+.env.*
+
+# Spring configuration containing credentials
+src/main/resources/application.properties
+src/main/resources/application.yml
+src/main/resources/application-*.properties
+src/main/resources/application-*.yml
+
+# Secret keys and certificates
+*.key
+*.pem
+*.crt
+*.p12
+*.jks
+*.keystore
+
+# Logs
+*.log
+logs/
+
+# Jenkins
+.jenkins/
+
+# Docker
+docker-compose.override.yml
+
+# Security reports
+dependency-check-report.*
+gitleaks-report.*
+zap-report.*
+trivy-report.*
+
+# Sonar
+.sonar/
+
+# Temporary files
+tmp/
+temp/
