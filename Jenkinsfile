@@ -74,5 +74,12 @@ pipeline {
                 '''
             }
         }
+        stage('Docker Security Scan') {
+            steps {
+                sh '''
+                trivy image --scanners vuln --timeout 20m projet-devops-devssecops_app
+                '''
+            }
+        }
     }
 }
