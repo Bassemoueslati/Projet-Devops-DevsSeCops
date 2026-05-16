@@ -3,6 +3,19 @@ pipeline {
 
     stages {
 
+        stage('GitLeaks Scan') {
+            steps {
+                sh '''
+                cd /vagrant/Projet-Devops-DevsSeCops
+
+                docker run --rm \
+                -v $(pwd):/path \
+                zricethezav/gitleaks:latest \
+                detect --source="/path"
+                '''
+            }
+        }
+
         stage('Build') {
             steps {
                 sh 'mvn clean package -DskipTests'
