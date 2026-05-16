@@ -15,6 +15,13 @@ pipeline {
                 '''
             }
         }
+        stage('OWASP Dependency Check') {
+            steps {
+                sh '''
+                mvn org.owasp:dependency-check-maven:check
+                '''
+            }
+        }
 
         stage('Build') {
             steps {
