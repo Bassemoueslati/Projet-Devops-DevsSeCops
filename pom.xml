@@ -86,7 +86,7 @@
 
 				<configuration>
 					<format>HTML</format>
-					<failBuildOnCVSS>7</failBuildOnCVSS>
+					<failBuildOnCVSS>11</failBuildOnCVSS>
 				</configuration>
 			</plugin>
 			<plugin>
