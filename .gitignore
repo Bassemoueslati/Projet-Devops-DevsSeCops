@@ -38,11 +38,13 @@ build/
 .env
 .env.*
 
-# Spring configuration containing credentials
+# Sensitive configuration
 src/main/resources/application.properties
 src/main/resources/application.yml
 src/main/resources/application-*.properties
 src/main/resources/application-*.yml
+.env
+.env.*
 
 # Secret keys and certificates
 *.key
