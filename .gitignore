@@ -76,3 +76,4 @@ trivy-report.*
 # Temporary files
 tmp/
 temp/
+Dependency-Remediation-Report.md
