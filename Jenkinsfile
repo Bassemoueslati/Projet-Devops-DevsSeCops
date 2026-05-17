@@ -80,12 +80,14 @@ pipeline {
         stage('Docker Security Scan') {
             steps {
                 sh '''
+                docker images
+
                 trivy image \
                 --scanners vuln \
                 --timeout 20m \
                 --format json \
                 -o target/trivy-report.json \
-                projet-devops-devssecops_app
+                pipeline-app
                 '''
             }
         }
