@@ -38,6 +38,22 @@ pipeline {
                 sh 'mvn test'
             }
         }
+         stage('Start SonarQube') {
+            steps {
+                sh '''
+                docker rm -f sonarqube || true
+
+                docker run -d \
+                  --name sonarqube \
+                  -p 9000:9000 \
+                  --restart unless-stopped \
+                  sonarqube:lts-community
+
+                echo "Waiting for SonarQube..."
+                sleep 90
+                '''
+            }
+         }
 
         stage('SonarQube') {
             steps {
