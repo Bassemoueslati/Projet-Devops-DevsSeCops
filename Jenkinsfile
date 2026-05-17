@@ -18,7 +18,7 @@ pipeline {
         stage('OWASP Dependency Check') {
             steps {
                 sh '''
-                mvn org.owasp:dependency-check-maven:check
+                mvn clean verify org.owasp:dependency-check-maven:check
                 '''
             }
         }
