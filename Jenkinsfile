@@ -15,6 +15,7 @@ pipeline {
                 '''
             }
         }
+
         stage('OWASP Dependency Check') {
             steps {
                 sh '''
@@ -78,12 +79,36 @@ pipeline {
                 '''
             }
         }
+
         stage('Docker Security Scan') {
             steps {
                 sh '''
                 trivy image --scanners vuln --timeout 20m projet-devops-devssecops_app
                 '''
             }
+        }
+
+        stage('OWASP ZAP Scan') {
+            steps {
+                sh '''
+                cd /vagrant/Projet-Devops-DevsSeCops
+
+                docker run --rm \
+                -v $(pwd):/zap/wrk/:rw \
+                --network=host \
+                ghcr.io/zaproxy/zaproxy:stable \
+                zap-baseline.py \
+                -t http://localhost:8089/SpringMVC \
+                -r zap-report.html
+                '''
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'target/dependency-check-report.html', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'zap-report.html', allowEmptyArchive: true
         }
     }
 }
