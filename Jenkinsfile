@@ -25,7 +25,11 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'mvn clean package -DskipTests'
+                sh '''
+                rm -rf target
+                mvn dependency:purge-local-repository
+                mvn clean package -U -DskipTests
+                '''
             }
         }
 
