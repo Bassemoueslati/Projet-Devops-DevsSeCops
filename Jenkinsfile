@@ -64,7 +64,7 @@ pipeline {
             steps {
                 sh '''
                 cd /vagrant/Projet-Devops-DevsSeCops
-                docker build -t achat-app .
+                docker build --no-cache -t achat-app .
                 '''
             }
         }
