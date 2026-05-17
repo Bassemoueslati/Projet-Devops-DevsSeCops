@@ -86,9 +86,8 @@ pipeline {
                 trivy image \
                 --scanners vuln \
                 --timeout 20m \
-                --format template \
-                --template "@/usr/local/share/trivy/templates/html.tpl" \
-                -o target/trivy-report.html \
+                --format json \
+                -o target/trivy-report.json \
                 projet-devops-devssecops_app
                 '''
             }
@@ -113,7 +112,7 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: 'target/*.html', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'target/*.html,target/*.json', allowEmptyArchive: true
         }
     }
 }
