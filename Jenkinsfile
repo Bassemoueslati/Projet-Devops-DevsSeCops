@@ -6,7 +6,6 @@ pipeline {
         stage('GitLeaks Scan') {
             steps {
                 sh '''
-                cd /bassem/Projects/Projet-Devops-DevsSeCops
 
                 docker run --rm \
                 -v $(pwd):/path \
@@ -64,7 +63,6 @@ pipeline {
         stage('Docker Build') {
             steps {
                 sh '''
-                cd /bassem/Projects/Projet-Devops-DevsSeCops
                 docker build --no-cache -t achat-app .
                 '''
             }
@@ -73,7 +71,6 @@ pipeline {
         stage('Docker Deploy') {
             steps {
                 sh '''
-                cd /bassem/Projects/Projet-Devops-DevsSeCops
                 docker-compose down || true
                 docker-compose up -d --build
                 '''
@@ -96,7 +93,6 @@ pipeline {
         stage('OWASP ZAP Scan') {
             steps {
                 sh '''
-                cd bassem/Projects/Projet-Devops-DevsSeCops
 
                 docker run --rm \
                 -v $(pwd)/target:/zap/wrk/:rw \
