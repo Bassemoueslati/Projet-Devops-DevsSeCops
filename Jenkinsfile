@@ -63,7 +63,7 @@ pipeline {
                         mvn sonar:sonar \
                         -Dsonar.projectKey=achat \
                         -Dsonar.host.url=http://localhost:9000 \
-                        -Dsonar.login=$SONAR_TOKEN
+                        -Dsonar.token=$SONAR_TOKEN
                         '''
                     }
                 }
