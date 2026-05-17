@@ -86,7 +86,8 @@ pipeline {
                 trivy image \
                 --scanners vuln \
                 --timeout 20m \
-                -f html \
+                --format template \
+                --template "@/usr/local/share/trivy/templates/html.tpl" \
                 -o target/trivy-report.html \
                 projet-devops-devssecops_app
                 '''
