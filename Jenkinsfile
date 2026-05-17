@@ -83,7 +83,12 @@ pipeline {
         stage('Docker Security Scan') {
             steps {
                 sh '''
-                trivy image --scanners vuln --timeout 20m projet-devops-devssecops_app
+                trivy image \
+                --scanners vuln \
+                --timeout 20m \
+                -f html \
+                -o target/trivy-report.html \
+                projet-devops-devssecops_app
                 '''
             }
         }
@@ -94,7 +99,7 @@ pipeline {
                 cd /vagrant/Projet-Devops-DevsSeCops
 
                 docker run --rm \
-                -v $(pwd):/zap/wrk/:rw \
+                -v $(pwd)/target:/zap/wrk/:rw \
                 --network=host \
                 ghcr.io/zaproxy/zaproxy:stable \
                 zap-baseline.py \
@@ -107,8 +112,7 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: 'target/dependency-check-report.html', allowEmptyArchive: true
-            archiveArtifacts artifacts: 'zap-report.html', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'target/*.html', allowEmptyArchive: true
         }
     }
 }
