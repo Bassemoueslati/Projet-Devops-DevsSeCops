@@ -1,6 +1,8 @@
 package tn.esprit.rh.achat.controllers;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.web.bind.annotation.*;
 
 import tn.esprit.rh.achat.dto.ProduitDTO;
@@ -11,7 +13,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
-@Api(tags = "Gestion des produits")
+@Tag(name = "Gestion des produits")
 @RequestMapping("/produit")
 public class ProduitRestController {
 
@@ -21,47 +23,64 @@ public class ProduitRestController {
         this.produitService = produitService;
     }
 
+    @Operation(summary = "Retrieve all products")
     @GetMapping("/retrieve-all-produits")
     public List<Produit> getProduits() {
         return produitService.retrieveAllProduits();
     }
 
+    @Operation(summary = "Retrieve product by ID")
     @GetMapping("/retrieve-produit/{produit-id}")
-    public Produit retrieveRayon(@PathVariable("produit-id") Long produitId) {
+    public Produit retrieveRayon(
+            @PathVariable("produit-id") Long produitId) {
+
         return produitService.retrieveProduit(produitId);
     }
 
-	@PostMapping("/add-produit")
-	public Produit addProduit(@RequestBody ProduitDTO dto) {
-		Produit p = new Produit();
-		p.setIdProduit(dto.getIdProduit());
-		p.setCodeProduit(dto.getCodeProduit());
-		p.setLibelleProduit(dto.getLibelleProduit());
-		p.setPrix(dto.getPrix());
-		p.setDateCreation(dto.getDateCreation());
-		p.setDateDerniereModification(dto.getDateDerniereModification());
-		return produitService.addProduit(p);
-	}
+    @Operation(summary = "Add a product")
+    @PostMapping("/add-produit")
+    public Produit addProduit(@RequestBody ProduitDTO dto) {
 
+        Produit p = new Produit();
+        p.setIdProduit(dto.getIdProduit());
+        p.setCodeProduit(dto.getCodeProduit());
+        p.setLibelleProduit(dto.getLibelleProduit());
+        p.setPrix(dto.getPrix());
+        p.setDateCreation(dto.getDateCreation());
+        p.setDateDerniereModification(dto.getDateDerniereModification());
+
+        return produitService.addProduit(p);
+    }
+
+    @Operation(summary = "Delete product")
     @DeleteMapping("/remove-produit/{produit-id}")
-    public void removeProduit(@PathVariable("produit-id") Long produitId) {
+    public void removeProduit(
+            @PathVariable("produit-id") Long produitId) {
+
         produitService.deleteProduit(produitId);
     }
 
-	@PutMapping("/modify-produit")
-	public Produit modifyProduit(@RequestBody ProduitDTO dto) {
-		Produit p = new Produit();
-		p.setIdProduit(dto.getIdProduit());
-		p.setCodeProduit(dto.getCodeProduit());
-		p.setLibelleProduit(dto.getLibelleProduit());
-		p.setPrix(dto.getPrix());
-		p.setDateCreation(dto.getDateCreation());
-		p.setDateDerniereModification(dto.getDateDerniereModification());
-		return produitService.updateProduit(p);
-	}
+    @Operation(summary = "Modify product")
+    @PutMapping("/modify-produit")
+    public Produit modifyProduit(@RequestBody ProduitDTO dto) {
 
+        Produit p = new Produit();
+        p.setIdProduit(dto.getIdProduit());
+        p.setCodeProduit(dto.getCodeProduit());
+        p.setLibelleProduit(dto.getLibelleProduit());
+        p.setPrix(dto.getPrix());
+        p.setDateCreation(dto.getDateCreation());
+        p.setDateDerniereModification(dto.getDateDerniereModification());
+
+        return produitService.updateProduit(p);
+    }
+
+    @Operation(summary = "Assign product to stock")
     @PutMapping("/assignProduitToStock/{idProduit}/{idStock}")
-    public void assignProduitToStock(@PathVariable Long idProduit, @PathVariable Long idStock) {
+    public void assignProduitToStock(
+            @PathVariable Long idProduit,
+            @PathVariable Long idStock) {
+
         produitService.assignProduitToStock(idProduit, idStock);
     }
 }
