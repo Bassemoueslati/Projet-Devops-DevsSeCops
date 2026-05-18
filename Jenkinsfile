@@ -18,9 +18,15 @@ pipeline {
 
         stage('OWASP Dependency Check') {
             steps {
-                sh '''
-                mvn org.owasp:dependency-check-maven:check
-                '''
+
+                dependencyCheck(
+                    odcInstallation: 'OWASP-DC',
+                    additionalArguments: '--scan /vagrant/Projet-Devops-DevsSeCops'
+                )
+
+                dependencyCheckPublisher(
+                    pattern: '**/dependency-check-report.xml'
+                )
             }
         }
 
