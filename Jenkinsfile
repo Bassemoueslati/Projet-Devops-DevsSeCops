@@ -85,6 +85,8 @@ pipeline {
                 sh '''
                 trivy image \
                 --scanners vuln \
+                --skip-java-db-update \
+                --skip-version-check \
                 --timeout 20m \
                 --format json \
                 -o target/trivy-report.json \
