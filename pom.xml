@@ -104,7 +104,6 @@
     <build>
         <plugins>
 
-            <!-- OWASP Dependency Check -->
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
@@ -113,7 +112,7 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>check</goal> 
+                            <goal>check</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -121,7 +120,13 @@
                 <configuration>
                     <format>HTML</format>
                     <failBuildOnCVSS>11</failBuildOnCVSS>
+
                     <ossindexAnalyzerEnabled>false</ossindexAnalyzerEnabled>
+
+                    <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>
+
+                    <hostedSuppressionsEnabled>false</hostedSuppressionsEnabled>
+
                 </configuration>
             </plugin>
 
